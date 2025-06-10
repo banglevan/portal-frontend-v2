@@ -4,6 +4,7 @@ class GalleryComponent {
         this.allApplications = [];
         this.filteredApplications = [];
         this.currentCategory = 'All';
+        this.currentChip = 'All Chips';
         this.searchQuery = '';
         this.currentPage = 1;
         this.itemsPerPage = 12;
@@ -26,6 +27,7 @@ class GalleryComponent {
 
     render() {
         this.renderFilters();
+        this.renderChipDropdown();
         this.renderSearchBox();
         this.renderApplications();
         this.updateResultsCounter();
@@ -45,6 +47,31 @@ class GalleryComponent {
         filterTagsContainer.innerHTML = filtersHTML;
     }
 
+    renderChipDropdown() {
+        const filtersSection = document.querySelector('.gallery-filters .container');
+        if (!filtersSection || filtersSection.querySelector('.chip-dropdown-container')) return;
+
+        const chipDropdownHTML = `
+            <div class="chip-dropdown-container">
+                <label for="chip-filter" class="filter-label">Choose a chip type</label>
+                <div class="dropdown-wrapper">
+                    <select id="chip-filter" class="chip-dropdown">
+                        ${applicationsData.chips.map(chip => `
+                            <option value="${chip}" ${chip === this.currentChip ? 'selected' : ''}>
+                                ${chip}
+                            </option>
+                        `).join('')}
+                    </select>
+                    <div class="dropdown-arrow">▼</div>
+                </div>
+            </div>
+        `;
+
+        // Insert chip dropdown before filter container
+        const filterContainer = filtersSection.querySelector('.filter-container');
+        filterContainer.insertAdjacentHTML('beforebegin', chipDropdownHTML);
+    }
+
     renderSearchBox() {
         const filtersSection = document.querySelector('.gallery-filters .container');
         if (!filtersSection || filtersSection.querySelector('.search-container')) return;
@@ -59,9 +86,14 @@ class GalleryComponent {
             </div>
         `;
 
-        // Insert search box before filter container
-        const filterContainer = filtersSection.querySelector('.filter-container');
-        filterContainer.insertAdjacentHTML('beforebegin', searchHTML);
+        // Insert search box before chip dropdown container
+        const chipDropdownContainer = filtersSection.querySelector('.chip-dropdown-container');
+        if (chipDropdownContainer) {
+            chipDropdownContainer.insertAdjacentHTML('beforebegin', searchHTML);
+        } else {
+            const filterContainer = filtersSection.querySelector('.filter-container');
+            filterContainer.insertAdjacentHTML('beforebegin', searchHTML);
+        }
     }
 
     renderApplications() {
@@ -100,6 +132,7 @@ class GalleryComponent {
                     <div class="app-info">
                         <h4>${app.name}</h4>
                         <div class="app-company">${app.company}</div>
+                        <div class="app-chip">${app.chip}</div>
                     </div>
                 </div>
                 <div class="app-description">${app.description}</div>
@@ -156,6 +189,13 @@ class GalleryComponent {
             );
         }
 
+        // Filter by chip
+        if (this.currentChip !== 'All Chips') {
+            filtered = filtered.filter(app => 
+                app.chip === this.currentChip
+            );
+        }
+
         // Filter by search query
         if (this.searchQuery.trim()) {
             const query = this.searchQuery.toLowerCase().trim();
@@ -163,6 +203,7 @@ class GalleryComponent {
                 app.name.toLowerCase().includes(query) ||
                 app.company.toLowerCase().includes(query) ||
                 app.description.toLowerCase().includes(query) ||
+                app.chip.toLowerCase().includes(query) ||
                 app.categories.some(cat => cat.toLowerCase().includes(query))
             );
         }
@@ -183,6 +224,13 @@ class GalleryComponent {
         document.addEventListener('input', (e) => {
             if (e.target.classList.contains('search-box')) {
                 this.handleSearch(e.target.value);
+            }
+        });
+
+        // Chip dropdown change
+        document.addEventListener('change', (e) => {
+            if (e.target.id === 'chip-filter') {
+                this.handleChipFilter(e.target.value);
             }
         });
 
@@ -228,6 +276,20 @@ class GalleryComponent {
 
         // Analytics tracking
         this.trackEvent('Filter', 'Category', category);
+    }
+
+    handleChipFilter(chip) {
+        this.currentChip = chip;
+        this.showLoading();
+        
+        setTimeout(() => {
+            this.filterApplications();
+            this.renderApplications();
+            this.updateResultsCounter();
+        }, 300);
+
+        // Analytics tracking
+        this.trackEvent('Filter', 'Chip', chip);
     }
 
     handleSearch(query) {
@@ -298,6 +360,10 @@ class GalleryComponent {
                 </div>
                 <div class="app-modal-content">
                     <p>${app.description}</p>
+                    <div class="modal-chip-info">
+                        <span class="modal-chip-label">Compatible Chip:</span>
+                        <span class="modal-chip-value">${app.chip}</span>
+                    </div>
                     <div class="modal-categories">
                         ${app.categories.map(cat => `<span class="modal-category">${cat}</span>`).join('')}
                     </div>
@@ -377,6 +443,25 @@ class GalleryComponent {
             }
             .app-modal-content {
                 padding: 30px;
+            }
+            .modal-chip-info {
+                margin: 15px 0;
+                padding: 12px;
+                background: var(--bg-secondary);
+                border-radius: 8px;
+                border-left: 4px solid var(--primary-color);
+            }
+            .modal-chip-label {
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-right: 8px;
+            }
+            .modal-chip-value {
+                color: var(--primary-color);
+                font-weight: 500;
+                background: rgba(99, 102, 241, 0.1);
+                padding: 4px 8px;
+                border-radius: 12px;
             }
             .modal-categories {
                 display: flex;

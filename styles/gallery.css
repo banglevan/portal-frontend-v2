@@ -182,6 +182,17 @@
 .app-info .app-company {
     font-size: 0.9rem;
     color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.app-info .app-chip {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    font-weight: 500;
 }
 
 .app-description {
@@ -264,6 +275,53 @@
     font-size: 1rem;
     max-width: 400px;
     margin: 0 auto;
+}
+
+/* Chip Dropdown */
+.chip-dropdown-container {
+    margin-bottom: 30px;
+}
+
+.dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 250px;
+}
+
+.chip-dropdown {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.chip-dropdown:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.dropdown-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.chip-dropdown:focus + .dropdown-arrow {
+    transform: translateY(-50%) rotate(180deg);
 }
 
 /* Search Box */
@@ -374,6 +432,11 @@
     
     .search-box {
         max-width: 100%;
+    }
+    
+    .dropdown-wrapper {
+        width: 100%;
+        max-width: 300px;
     }
 }
 
