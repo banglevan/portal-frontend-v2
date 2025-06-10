@@ -558,10 +558,12 @@ body {
 }
 
 .footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
     margin-bottom: 40px;
+    flex-wrap: wrap;
 }
 
 .footer-section h3 {
@@ -627,6 +629,12 @@ body {
     .logos-grid {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: 20px;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
     }
 }
 

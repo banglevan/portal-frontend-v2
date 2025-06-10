@@ -211,7 +211,7 @@ class FooterComponent {
 
             @media (max-width: 768px) {
                 .footer-content {
-                    grid-template-columns: 1fr;
+                    flex-direction: column;
                     gap: 30px;
                     text-align: center;
                 }

@@ -23,7 +23,7 @@ class HeaderComponent {
                         <ul class="nav-menu">
                             <li><a href="#platform">Platform</a></li>
                             <li><a href="gallery.html">Gallery</a></li>
-                            <li><a href="#applications">Applications</a></li>
+                            <li><a href="applications-manager.html">Applications</a></li>
                             <li><a href="#resources">Resources</a></li>
                             <li><a href="#pricing">Pricing</a></li>
                         </ul>

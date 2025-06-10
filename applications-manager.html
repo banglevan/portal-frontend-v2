@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications Manager - Labelbox</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/applications-manager.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Header Component -->
+        <header id="header"></header>
+        
+        <!-- Applications Banner -->
+        <section class="applications-banner">
+            <div class="container">
+                <div class="banner-content">
+                    <h1>Applications Manager</h1>
+                    <p>Manage and configure your AI applications</p>
+                    <div class="banner-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">12</span>
+                            <span class="stat-label">Active Apps</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">4</span>
+                            <span class="stat-label">Categories</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">98.5%</span>
+                            <span class="stat-label">Uptime</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Main Applications Content -->
+        <section class="applications-main">
+            <div class="container-fluid">
+                <div class="applications-layout">
+                    <!-- Sidebar -->
+                    <aside class="applications-sidebar" id="applicationsSidebar">
+                        <div class="sidebar-header">
+                            <h3>My Applications</h3>
+                            <button class="sidebar-toggle" id="sidebarToggle">
+                                <span class="toggle-icon">◀</span>
+                            </button>
+                        </div>
+                        
+                        <div class="sidebar-search">
+                            <input type="text" placeholder="Search applications..." id="appSearch">
+                        </div>
+                        
+                        <div class="applications-list" id="applicationsList">
+                            <!-- Applications will be loaded here -->
+                        </div>
+                        
+                        <div class="sidebar-footer">
+                            <button class="btn btn-primary btn-sm">
+                                <span>+ New Application</span>
+                            </button>
+                        </div>
+                    </aside>
+                    
+                    <!-- Main Content -->
+                    <main class="applications-content">
+                        <div class="content-header">
+                            <div class="app-info" id="currentAppInfo">
+                                <h2>Select an application</h2>
+                                <p>Choose an application from the sidebar to view and edit its configuration.</p>
+                            </div>
+                            
+                            <div class="content-actions">
+                                <button class="btn btn-outline btn-sm">Export Config</button>
+                                <button class="btn btn-primary btn-sm">Save Changes</button>
+                            </div>
+                        </div>
+                        
+                        <div class="config-tabs" id="configTabs" style="display: none;">
+                            <nav class="tabs-nav">
+                                <button class="tab-btn active" data-tab="general">General</button>
+                                <button class="tab-btn" data-tab="advanced">Advanced</button>
+                                <button class="tab-btn" data-tab="performance">Performance</button>
+                                <button class="tab-btn" data-tab="security">Security</button>
+                                <button class="tab-btn" data-tab="monitoring">Monitoring</button>
+                            </nav>
+                            
+                            <div class="tab-content">
+                                <!-- General Tab -->
+                                <div class="tab-pane active" id="generalTab">
+                                    <div class="config-section">
+                                        <h3>Basic Configuration</h3>
+                                        <div class="config-grid">
+                                            <div class="config-item">
+                                                <label>Application Name</label>
+                                                <input type="text" id="appName" placeholder="Enter application name">
+                                            </div>
+                                            <div class="config-item">
+                                                <label>Application Type</label>
+                                                <select id="appType">
+                                                    <option value="face-recognition">Face Recognition</option>
+                                                    <option value="license-plate">License Plate Detection</option>
+                                                    <option value="object-detection">Object Detection</option>
+                                                    <option value="text-recognition">Text Recognition</option>
+                                                </select>
+                                            </div>
+                                            <div class="config-item">
+                                                <label>Status</label>
+                                                <select id="appStatus">
+                                                    <option value="active">Active</option>
+                                                    <option value="inactive">Inactive</option>
+                                                    <option value="maintenance">Maintenance</option>
+                                                </select>
+                                            </div>
+                                            <div class="config-item">
+                                                <label>Description</label>
+                                                <textarea id="appDescription" rows="3" placeholder="Application description..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Advanced Tab -->
+                                <div class="tab-pane" id="advancedTab">
+                                    <div class="config-section">
+                                        <h3>AI Model Configuration</h3>
+                                        <div class="config-grid">
+                                            <div class="config-item">
+                                                <label>Model Version</label>
+                                                <select id="modelVersion">
+                                                    <option value="v1.0">v1.0 - Stable</option>
+                                                    <option value="v1.1">v1.1 - Beta</option>
+                                                    <option value="v2.0">v2.0 - Experimental</option>
+                                                </select>
+                                            </div>
+                                            <div class="config-item">
+                                                <label>Confidence Threshold</label>
+                                                <input type="range" id="confidenceThreshold" min="0" max="100" value="85">
+                                                <span class="range-value">85%</span>
+                                            </div>
+                                            <div class="config-item">
+                                                <label>Processing Mode</label>
+                                                <select id="processingMode">
+                                                    <option value="realtime">Real-time</option>
+                                                    <option value="batch">Batch Processing</option>
+                                                    <option value="hybrid">Hybrid</option>
+                                                </select>
+                                            </div>
+                                            <div class="config-item checkbox-item">
+                                                <label>
+                                                    <input type="checkbox" id="enablePreprocessing">
+                                                    Enable Image Preprocessing
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Performance Tab -->
+                                <div class="tab-pane" id="performanceTab">
+                                    <div class="config-section">
+                                        <h3>Performance Settings</h3>
+                                        <div class="config-grid">
+                                            <div class="config-item">
+                                                <label>Max Concurrent Requests</label>
+                                                <input type="number" id="maxRequests" value="100" min="1" max="1000">
+                                            </div>
+                                            <div class="config-item">
+                                                <label>Request Timeout (seconds)</label>
+                                                <input type="number" id="requestTimeout" value="30" min="1" max="300">
+                                            </div>
+                                            <div class="config-item">
+                                                <label>Memory Limit (GB)</label>
+                                                <input type="number" id="memoryLimit" value="4" min="1" max="32" step="0.5">
+                                            </div>
+                                            <div class="config-item">
+                                                <label>CPU Cores</label>
+                                                <input type="number" id="cpuCores" value="2" min="1" max="16">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Security Tab -->
+                                <div class="tab-pane" id="securityTab">
+                                    <div class="config-section">
+                                        <h3>Security Configuration</h3>
+                                        <div class="config-grid">
+                                            <div class="config-item">
+                                                <label>API Key</label>
+                                                <div class="input-with-action">
+                                                    <input type="password" id="apiKey" value="sk-1234567890abcdef">
+                                                    <button type="button" class="btn-action">🔄</button>
+                                                </div>
+                                            </div>
+                                            <div class="config-item checkbox-item">
+                                                <label>
+                                                    <input type="checkbox" id="enableAuth" checked>
+                                                    Enable Authentication
+                                                </label>
+                                            </div>
+                                            <div class="config-item checkbox-item">
+                                                <label>
+                                                    <input type="checkbox" id="enableHttps" checked>
+                                                    Force HTTPS
+                                                </label>
+                                            </div>
+                                            <div class="config-item">
+                                                <label>Allowed Origins</label>
+                                                <textarea id="allowedOrigins" rows="3" placeholder="https://example.com&#10;https://app.example.com"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Monitoring Tab -->
+                                <div class="tab-pane" id="monitoringTab">
+                                    <div class="config-section">
+                                        <h3>Monitoring & Logging</h3>
+                                        <div class="config-grid">
+                                            <div class="config-item">
+                                                <label>Log Level</label>
+                                                <select id="logLevel">
+                                                    <option value="error">Error</option>
+                                                    <option value="warn">Warning</option>
+                                                    <option value="info" selected>Info</option>
+                                                    <option value="debug">Debug</option>
+                                                </select>
+                                            </div>
+                                            <div class="config-item checkbox-item">
+                                                <label>
+                                                    <input type="checkbox" id="enableMetrics" checked>
+                                                    Enable Metrics Collection
+                                                </label>
+                                            </div>
+                                            <div class="config-item checkbox-item">
+                                                <label>
+                                                    <input type="checkbox" id="enableAlerts">
+                                                    Enable Alerts
+                                                </label>
+                                            </div>
+                                            <div class="config-item">
+                                                <label>Alert Email</label>
+                                                <input type="email" id="alertEmail" placeholder="admin@example.com">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Empty State -->
+                        <div class="empty-state" id="emptyState">
+                            <div class="empty-icon">📱</div>
+                            <h3>No Application Selected</h3>
+                            <p>Select an application from the sidebar to configure its settings.</p>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer Component -->
+        <footer id="footer"></footer>
+    </div>
+
+    <!-- Load components -->
+    <script src="components/header.js"></script>
+    <script src="components/footer.js"></script>
+    <script src="data/user-applications.js"></script>
+    <script src="components/applications-manager.js"></script>
+    
+    <!-- Initialize -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new ApplicationsManagerComponent();
+        });
+    </script>
+</body>
+</html> 
