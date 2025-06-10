@@ -277,23 +277,41 @@
     margin: 0 auto;
 }
 
+/* Filters Row Container */
+.filters-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    max-width: 900px;
+}
+
+/* Search Box */
+.search-container {
+    position: relative;
+    flex: 2;
+    min-width: 400px;
+}
+
 /* Chip Dropdown */
 .chip-dropdown-container {
-    margin-bottom: 30px;
+    flex: 1;
+    min-width: 200px;
 }
 
 .dropdown-wrapper {
     position: relative;
-    display: inline-block;
-    width: 250px;
+    display: block;
+    width: 100%;
 }
 
 .chip-dropdown {
     width: 100%;
-    padding: 12px 40px 12px 15px;
+    padding: 14px 40px 14px 15px;
     border: 2px solid var(--border-color);
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
     background: var(--bg-primary);
     color: var(--text-primary);
     cursor: pointer;
@@ -301,6 +319,8 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+    height: 48px;
+    box-sizing: border-box;
 }
 
 .chip-dropdown:focus {
@@ -324,21 +344,16 @@
     transform: translateY(-50%) rotate(180deg);
 }
 
-/* Search Box */
-.search-container {
-    margin-bottom: 30px;
-    position: relative;
-}
-
 .search-box {
     width: 100%;
-    max-width: 400px;
-    padding: 12px 20px 12px 50px;
+    padding: 14px 20px 14px 50px;
     border: 2px solid var(--border-color);
-    border-radius: 25px;
+    border-radius: 8px;
     font-size: 16px;
     background: var(--bg-primary);
     transition: all 0.3s ease;
+    height: 48px;
+    box-sizing: border-box;
 }
 
 .search-box:focus {
@@ -395,6 +410,23 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .filters-row {
+        gap: 8px;
+        max-width: 100%;
+    }
+    
+    .search-container {
+        min-width: 300px;
+        flex: 3;
+    }
+    
+    .chip-dropdown-container {
+        min-width: 150px;
+        flex: 1;
+    }
+}
+
 @media (max-width: 768px) {
     .gallery-hero {
         padding: 100px 0 40px;
@@ -430,13 +462,21 @@
         padding: 6px 12px;
     }
     
-    .search-box {
+    .filters-row {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
         max-width: 100%;
     }
     
-    .dropdown-wrapper {
-        width: 100%;
-        max-width: 300px;
+    .search-container {
+        min-width: auto;
+        flex: none;
+    }
+    
+    .chip-dropdown-container {
+        min-width: auto;
+        flex: none;
     }
 }
 

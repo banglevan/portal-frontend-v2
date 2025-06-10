@@ -27,8 +27,7 @@ class GalleryComponent {
 
     render() {
         this.renderFilters();
-        this.renderChipDropdown();
-        this.renderSearchBox();
+        this.renderFiltersRow();
         this.renderApplications();
         this.updateResultsCounter();
     }
@@ -47,53 +46,37 @@ class GalleryComponent {
         filterTagsContainer.innerHTML = filtersHTML;
     }
 
-    renderChipDropdown() {
+    renderFiltersRow() {
         const filtersSection = document.querySelector('.gallery-filters .container');
-        if (!filtersSection || filtersSection.querySelector('.chip-dropdown-container')) return;
+        if (!filtersSection || filtersSection.querySelector('.filters-row')) return;
 
-        const chipDropdownHTML = `
-            <div class="chip-dropdown-container">
-                <label for="chip-filter" class="filter-label">Choose a chip type</label>
-                <div class="dropdown-wrapper">
-                    <select id="chip-filter" class="chip-dropdown">
-                        ${applicationsData.chips.map(chip => `
-                            <option value="${chip}" ${chip === this.currentChip ? 'selected' : ''}>
-                                ${chip}
-                            </option>
-                        `).join('')}
-                    </select>
-                    <div class="dropdown-arrow">▼</div>
+        const filtersRowHTML = `
+            <div class="filters-row">
+                <div class="search-container">
+                    <div class="search-icon">🔍</div>
+                    <input type="text" 
+                           class="search-box" 
+                           placeholder="Search by keyword" 
+                           value="${this.searchQuery}">
+                </div>
+                <div class="chip-dropdown-container">
+                    <div class="dropdown-wrapper">
+                        <select id="chip-filter" class="chip-dropdown">
+                            ${applicationsData.chips.map(chip => `
+                                <option value="${chip}" ${chip === this.currentChip ? 'selected' : ''}>
+                                    ${chip}
+                                </option>
+                            `).join('')}
+                        </select>
+                        <div class="dropdown-arrow">▼</div>
+                    </div>
                 </div>
             </div>
         `;
 
-        // Insert chip dropdown before filter container
+        // Insert filters row before filter container
         const filterContainer = filtersSection.querySelector('.filter-container');
-        filterContainer.insertAdjacentHTML('beforebegin', chipDropdownHTML);
-    }
-
-    renderSearchBox() {
-        const filtersSection = document.querySelector('.gallery-filters .container');
-        if (!filtersSection || filtersSection.querySelector('.search-container')) return;
-
-        const searchHTML = `
-            <div class="search-container">
-                <div class="search-icon">🔍</div>
-                <input type="text" 
-                       class="search-box" 
-                       placeholder="Search applications..." 
-                       value="${this.searchQuery}">
-            </div>
-        `;
-
-        // Insert search box before chip dropdown container
-        const chipDropdownContainer = filtersSection.querySelector('.chip-dropdown-container');
-        if (chipDropdownContainer) {
-            chipDropdownContainer.insertAdjacentHTML('beforebegin', searchHTML);
-        } else {
-            const filterContainer = filtersSection.querySelector('.filter-container');
-            filterContainer.insertAdjacentHTML('beforebegin', searchHTML);
-        }
+        filterContainer.insertAdjacentHTML('beforebegin', filtersRowHTML);
     }
 
     renderApplications() {
