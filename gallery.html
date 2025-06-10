@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Gallery - Labelbox</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/gallery.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Header Component -->
+        <header id="header"></header>
+        
+        <!-- Gallery Hero Section -->
+        <section class="gallery-hero">
+            <div class="container">
+                <h1>Application Gallery</h1>
+                <p>The world's leading applications partner with Labelbox.</p>
+            </div>
+        </section>
+        
+        <!-- Gallery Filters -->
+        <section class="gallery-filters">
+            <div class="container">
+                <h3>All Labelbox applications</h3>
+                <div class="filter-container">
+                    <span class="filter-label">Choose a category</span>
+                    <div class="filter-tags" id="filter-tags"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Applications Grid -->
+        <section class="applications-grid">
+            <div class="container">
+                <div id="applications-container"></div>
+                <div class="load-more-container">
+                    <button id="load-more-btn" class="btn btn-outline">Load More Applications</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer Component -->
+        <footer id="footer"></footer>
+    </div>
+
+    <!-- Load components -->
+    <script src="components/header.js"></script>
+    <script src="components/footer.js"></script>
+    <script src="data/applications.js"></script>
+    <script src="components/gallery.js"></script>
+    
+    <!-- Initialize app -->
+    <script src="js/gallery-app.js"></script>
+</body>
+</html> 

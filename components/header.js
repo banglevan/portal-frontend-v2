@@ -22,7 +22,7 @@ class HeaderComponent {
                     <nav>
                         <ul class="nav-menu">
                             <li><a href="#platform">Platform</a></li>
-                            <li><a href="#gallery">Gallery</a></li>
+                            <li><a href="gallery.html">Gallery</a></li>
                             <li><a href="#applications">Applications</a></li>
                             <li><a href="#resources">Resources</a></li>
                             <li><a href="#pricing">Pricing</a></li>
@@ -52,14 +52,22 @@ class HeaderComponent {
             }
         });
 
-        // Smooth scroll for navigation links
+        // Handle navigation links
         const navLinks = this.headerElement.querySelectorAll('.nav-menu a');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href');
-                if (targetId.startsWith('#') && targetId !== '#') {
-                    const targetElement = document.querySelector(targetId);
+                const href = link.getAttribute('href');
+                
+                // Handle external page navigation
+                if (href === 'gallery.html') {
+                    // Let the browser handle the navigation naturally
+                    return;
+                }
+                
+                // Handle anchor links for smooth scrolling
+                if (href.startsWith('#') && href !== '#') {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(href);
                     if (targetElement) {
                         const offsetTop = targetElement.offsetTop - 80; // Account for fixed header
                         window.scrollTo({
