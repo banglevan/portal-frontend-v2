@@ -7,7 +7,7 @@ class GalleryComponent {
         this.currentChip = 'All Chips';
         this.searchQuery = '';
         this.currentPage = 1;
-        this.itemsPerPage = 12;
+        this.itemsPerPage = 9;
         this.isLoading = false;
         this.init();
     }
@@ -99,13 +99,17 @@ class GalleryComponent {
                     <p>Try adjusting your search criteria or browse different categories.</p>
                 </div>
             `;
-            this.updateLoadMoreButton(false);
+            // Hide pagination when no results
+            const paginationContainer = document.querySelector('.pagination-container');
+            if (paginationContainer) {
+                paginationContainer.style.display = 'none';
+            }
             return;
         }
 
-        // Calculate visible applications
-        const startIndex = 0;
-        const endIndex = this.currentPage * this.itemsPerPage;
+        // Calculate visible applications for current page
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
         const visibleApps = this.filteredApplications.slice(startIndex, endIndex);
 
         const applicationsHTML = visibleApps.map(app => `
@@ -129,8 +133,15 @@ class GalleryComponent {
 
         container.innerHTML = applicationsHTML;
 
-        // Update load more button visibility
-        this.updateLoadMoreButton(endIndex < this.filteredApplications.length);
+        // Force grid layout with inline styles as backup
+        container.style.display = 'grid';
+        container.style.gridTemplateColumns = 'repeat(3, 1fr)';
+        container.style.gap = '30px';
+        container.style.maxWidth = '1200px';
+        container.style.margin = '0 auto 40px auto';
+
+        // Update pagination buttons
+        this.updatePaginationButtons();
 
         // Animate cards
         this.animateCards();
@@ -148,18 +159,49 @@ class GalleryComponent {
         }
 
         const totalResults = this.filteredApplications.length;
-        const currentlyShowing = Math.min(this.currentPage * this.itemsPerPage, totalResults);
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
+        const endIndex = Math.min(this.currentPage * this.itemsPerPage, totalResults);
         
-        counterElement.textContent = `Showing ${currentlyShowing} of ${totalResults} applications`;
+        if (totalResults === 0) {
+            counterElement.textContent = 'No applications found';
+        } else {
+            counterElement.textContent = `Showing ${startIndex}-${endIndex} of ${totalResults} applications`;
+        }
     }
 
-    updateLoadMoreButton(show) {
-        const loadMoreBtn = document.getElementById('load-more-btn');
-        const container = loadMoreBtn?.parentElement;
+    updatePaginationButtons() {
+        const totalPages = Math.ceil(this.filteredApplications.length / this.itemsPerPage);
         
-        if (container) {
-            container.style.display = show ? 'block' : 'none';
+        // Create pagination container if not exists
+        let paginationContainer = document.querySelector('.pagination-container');
+        if (!paginationContainer) {
+            const applicationsSection = document.querySelector('.applications-grid .container');
+            paginationContainer = document.createElement('div');
+            paginationContainer.className = 'pagination-container';
+            applicationsSection.appendChild(paginationContainer);
         }
+        
+        if (totalPages <= 1) {
+            paginationContainer.style.display = 'none';
+            return;
+        }
+        
+        paginationContainer.style.display = 'flex';
+        paginationContainer.innerHTML = `
+            <button class="pagination-btn prev-btn" ${this.currentPage === 1 ? 'disabled' : ''}>
+                <span class="pagination-arrow">‹</span>
+                Previous
+            </button>
+            <div class="pagination-info">
+                <span class="current-page">${this.currentPage}</span>
+                <span class="page-separator">of</span>
+                <span class="total-pages">${totalPages}</span>
+            </div>
+            <button class="pagination-btn next-btn" ${this.currentPage === totalPages ? 'disabled' : ''}>
+                Next
+                <span class="pagination-arrow">›</span>
+            </button>
+        `;
     }
 
     filterApplications() {
@@ -217,13 +259,14 @@ class GalleryComponent {
             }
         });
 
-        // Load more button
-        const loadMoreBtn = document.getElementById('load-more-btn');
-        if (loadMoreBtn) {
-            loadMoreBtn.addEventListener('click', () => {
-                this.loadMoreApplications();
-            });
-        }
+        // Pagination buttons
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.prev-btn')) {
+                this.goToPrevPage();
+            } else if (e.target.closest('.next-btn')) {
+                this.goToNextPage();
+            }
+        });
 
         // App card clicks
         document.addEventListener('click', (e) => {
@@ -295,25 +338,38 @@ class GalleryComponent {
         }
     }
 
-    loadMoreApplications() {
-        const loadMoreBtn = document.getElementById('load-more-btn');
-        if (loadMoreBtn) {
-            loadMoreBtn.textContent = 'Loading...';
-            loadMoreBtn.disabled = true;
-        }
-
-        setTimeout(() => {
+    goToNextPage() {
+        const totalPages = Math.ceil(this.filteredApplications.length / this.itemsPerPage);
+        if (this.currentPage < totalPages) {
             this.currentPage++;
-            this.renderApplications();
-            this.updateResultsCounter();
-            
-            if (loadMoreBtn) {
-                loadMoreBtn.textContent = 'Load More Applications';
-                loadMoreBtn.disabled = false;
-            }
-
-            this.trackEvent('Pagination', 'Load More', this.currentPage);
-        }, 500);
+            this.showLoading();
+            setTimeout(() => {
+                this.renderApplications();
+                this.updateResultsCounter();
+                this.scrollToTop();
+            }, 300);
+            this.trackEvent('Pagination', 'Next', this.currentPage);
+        }
+    }
+    
+    goToPrevPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            this.showLoading();
+            setTimeout(() => {
+                this.renderApplications();
+                this.updateResultsCounter();
+                this.scrollToTop();
+            }, 300);
+            this.trackEvent('Pagination', 'Previous', this.currentPage);
+        }
+    }
+    
+    scrollToTop() {
+        const applicationsSection = document.querySelector('.applications-grid');
+        if (applicationsSection) {
+            applicationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
 
     handleAppClick(appId) {

@@ -108,11 +108,28 @@
     min-height: 60vh;
 }
 
+/* Applications Grid - 3x3 layout */
+.applications-grid .container #applications-container {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-template-rows: repeat(3, auto) !important;
+    gap: 30px !important;
+    margin-bottom: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Fallback class name */
 .applications-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    margin-bottom: 60px;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-template-rows: repeat(3, auto) !important;
+    gap: 30px !important;
+    margin-bottom: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .app-card {
@@ -224,16 +241,76 @@
     background: rgba(99, 102, 241, 0.2);
 }
 
-/* Load More Button */
-.load-more-container {
-    text-align: center;
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 40px;
+    padding: 20px 0;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-#load-more-btn {
-    padding: 15px 30px;
+.pagination-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
     font-size: 16px;
-    min-width: 200px;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.pagination-arrow {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.pagination-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-secondary);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.current-page {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.page-separator {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.total-pages {
+    color: var(--text-secondary);
+    font-size: 16px;
 }
 
 /* Loading State */
@@ -445,8 +522,19 @@
     }
     
     .applications-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
+    }
+    
+    .pagination-container {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .pagination-btn {
+        min-width: 100px;
+        padding: 10px 20px;
     }
     
     .app-card {
@@ -485,6 +573,11 @@
         font-size: 2rem;
     }
     
+    .applications-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
     .app-header {
         flex-direction: column;
         text-align: center;
@@ -499,5 +592,15 @@
     
     .app-card {
         padding: 20px;
+    }
+    
+    .pagination-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+        min-width: 80px;
+    }
+    
+    .pagination-info {
+        padding: 8px 16px;
     }
 } 
