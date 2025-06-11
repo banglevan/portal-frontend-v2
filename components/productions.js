@@ -34,31 +34,41 @@ class ProductionsComponent {
     }
 
     bindEvents() {
-        // Category card interactions
-        const categoryCards = document.querySelectorAll('.category-card');
-        categoryCards.forEach(card => {
-            card.addEventListener('mouseenter', this.handleCardHover.bind(this));
-            card.addEventListener('mouseleave', this.handleCardLeave.bind(this));
-            card.addEventListener('click', this.handleCardClick.bind(this));
-        });
+        // Wait for DOM to be fully loaded
+        setTimeout(() => {
+            // Category card interactions
+            const categoryCards = document.querySelectorAll('.category-card');
+            categoryCards.forEach(card => {
+                card.addEventListener('mouseenter', this.handleCardHover.bind(this));
+                card.addEventListener('mouseleave', this.handleCardLeave.bind(this));
+                card.addEventListener('click', this.handleCardClick.bind(this));
+            });
 
-        // Showcase item interactions
-        const showcaseItems = document.querySelectorAll('.showcase-item');
-        showcaseItems.forEach(item => {
-            item.addEventListener('click', this.handleShowcaseClick.bind(this));
-        });
+            // Showcase item interactions
+            const showcaseItems = document.querySelectorAll('.showcase-item');
+            showcaseItems.forEach(item => {
+                item.addEventListener('click', this.handleShowcaseClick.bind(this));
+            });
 
-        // CTA button interactions
-        const ctaButtons = document.querySelectorAll('.cta-actions .btn');
-        ctaButtons.forEach(btn => {
-            btn.addEventListener('click', this.handleCTAClick.bind(this));
-        });
+            // CTA button interactions
+            const ctaButtons = document.querySelectorAll('.cta-actions .btn');
+            ctaButtons.forEach(btn => {
+                btn.addEventListener('click', this.handleCTAClick.bind(this));
+            });
 
-        // Learn more buttons
-        const learnMoreButtons = document.querySelectorAll('.category-card .btn');
-        learnMoreButtons.forEach(btn => {
-            btn.addEventListener('click', this.handleLearnMoreClick.bind(this));
-        });
+            // Learn more buttons
+            const learnMoreButtons = document.querySelectorAll('.category-card .btn');
+            learnMoreButtons.forEach(btn => {
+                btn.addEventListener('click', this.handleLearnMoreClick.bind(this));
+            });
+
+            console.log('Events bound successfully:', {
+                categoryCards: categoryCards.length,
+                showcaseItems: showcaseItems.length,
+                ctaButtons: ctaButtons.length,
+                learnMoreButtons: learnMoreButtons.length
+            });
+        }, 500);
     }
 
     handleCardHover(e) {
@@ -141,65 +151,59 @@ class ProductionsComponent {
     }
 
     showProductModal(productElement) {
-        const productName = productElement.querySelector('h3').textContent;
-        const productDesc = productElement.querySelector('p').textContent;
-        const specs = Array.from(productElement.querySelectorAll('.spec')).map(spec => spec.textContent);
+        try {
+            const productName = productElement.querySelector('h3').textContent;
+            const productDesc = productElement.querySelector('p').textContent;
+            const specs = Array.from(productElement.querySelectorAll('.spec')).map(spec => spec.textContent);
+            const placeholderElement = productElement.querySelector('.product-placeholder');
 
-        const modal = document.createElement('div');
-        modal.className = 'product-modal-overlay';
-        modal.innerHTML = `
-            <div class="product-modal">
-                <div class="modal-header">
-                    <h2>${productName}</h2>
-                    <button class="modal-close">&times;</button>
-                </div>
-                <div class="modal-content">
-                    <div class="modal-image">
-                        ${productElement.querySelector('.product-placeholder').outerHTML}
+            const modal = document.createElement('div');
+            modal.className = 'product-modal-overlay';
+            modal.innerHTML = `
+                <div class="product-modal">
+                    <div class="modal-header">
+                        <h2>${productName}</h2>
+                        <button class="modal-close">&times;</button>
                     </div>
-                    <div class="modal-details">
-                        <p>${productDesc}</p>
-                        <div class="modal-specs">
-                            <h4>Key Features:</h4>
-                            <ul>
-                                ${specs.map(spec => `<li>${spec}</li>`).join('')}
-                            </ul>
+                    <div class="modal-content">
+                        <div class="modal-image">
+                            ${placeholderElement ? placeholderElement.outerHTML : '<div class="placeholder">No Image</div>'}
                         </div>
-                        <div class="modal-actions">
-                            <button class="btn btn-primary">Request Quote</button>
-                            <button class="btn btn-outline">Download Specs</button>
+                        <div class="modal-details">
+                            <p>${productDesc}</p>
+                            <div class="modal-specs">
+                                <h4>Key Features:</h4>
+                                <ul>
+                                    ${specs.length > 0 ? specs.map(spec => `<li>${spec}</li>`).join('') : '<li>Feature information coming soon</li>'}
+                                </ul>
+                            </div>
+                            <div class="modal-actions">
+                                <button class="btn btn-primary" onclick="alert('Request Quote feature coming soon!')">Request Quote</button>
+                                <button class="btn btn-outline" onclick="alert('Download Specs feature coming soon!')">Download Specs</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
 
-        // Add modal styles
-        modal.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        `;
+            document.body.appendChild(modal);
 
-        document.body.appendChild(modal);
+            // Bind close events
+            const closeBtn = modal.querySelector('.modal-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => this.closeModal(modal));
+            }
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) this.closeModal(modal);
+            });
 
-        // Bind close events
-        const closeBtn = modal.querySelector('.modal-close');
-        closeBtn.addEventListener('click', () => this.closeModal(modal));
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) this.closeModal(modal);
-        });
-
-        // Prevent body scroll
-        document.body.style.overflow = 'hidden';
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        } catch (error) {
+            console.error('Error showing product modal:', error);
+            alert('Error displaying product details. Please try again.');
+        }
     }
 
     showCategoryModal(category) {
@@ -324,13 +328,25 @@ class ProductionsComponent {
     }
 
     closeModal(modal) {
-        modal.style.animation = 'fadeOut 0.3s ease';
-        setTimeout(() => {
-            if (modal.parentNode) {
+        try {
+            modal.style.opacity = '0';
+            modal.style.transform = 'scale(0.95)';
+            modal.style.transition = 'all 0.3s ease';
+            
+            setTimeout(() => {
+                if (modal && modal.parentNode) {
+                    modal.parentNode.removeChild(modal);
+                }
+                document.body.style.overflow = '';
+            }, 300);
+        } catch (error) {
+            console.error('Error closing modal:', error);
+            // Fallback: try to remove modal immediately
+            if (modal && modal.parentNode) {
                 modal.parentNode.removeChild(modal);
             }
             document.body.style.overflow = '';
-        }, 300);
+        }
     }
 
     initInteractiveElements() {
