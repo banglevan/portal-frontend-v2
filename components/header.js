@@ -22,6 +22,7 @@ class HeaderComponent {
                     <nav>
                         <ul class="nav-menu">
                             <li><a href="index.html">Home</a></li>
+                            <li><a href="productions.html">Productions</a></li>
                             <li><a href="gallery.html">Gallery</a></li>
                             <li><a href="applications-manager.html">Applications</a></li>
                             <li><a href="#resources">Resources</a></li>
@@ -59,7 +60,7 @@ class HeaderComponent {
                 const href = link.getAttribute('href');
                 
                 // Handle external page navigation
-                if (href === 'gallery.html' || href === 'index.html' || href === 'applications-manager.html') {
+                if (href === 'gallery.html' || href === 'index.html' || href === 'applications-manager.html' || href === 'productions.html') {
                     // Let the browser handle the navigation naturally
                     return;
                 }
