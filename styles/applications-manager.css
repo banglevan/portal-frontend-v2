@@ -4,7 +4,7 @@
 .applications-banner {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: white;
-    padding: 60px 0;
+    padding: 100px 0 60px 0;
     position: relative;
     overflow: hidden;
 }
@@ -501,6 +501,10 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .applications-banner {
+        padding: 80px 0 60px 0;
+    }
+
     .banner-stats {
         flex-direction: column;
         gap: 30px;
@@ -563,6 +567,10 @@
 }
 
 @media (max-width: 480px) {
+    .applications-banner {
+        padding: 80px 0 50px 0;
+    }
+
     .banner-content h1 {
         font-size: 2rem;
     }
