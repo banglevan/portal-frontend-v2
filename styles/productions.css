@@ -194,12 +194,95 @@
     background: var(--bg-secondary);
 }
 
-.showcase-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 40px;
+.showcase-carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+.showcase-container {
+    flex: 1;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.showcase-track {
+    display: flex;
+    transition: transform 0.5s ease;
+    gap: 30px;
+}
+
+.carousel-btn {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.carousel-btn:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+.carousel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.carousel-btn:disabled:hover {
+    background: white;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+    transform: none;
+}
+
+.carousel-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.carousel-btn:hover svg {
+    transform: scale(1.2);
+}
+
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    background: var(--primary-color);
+    transform: scale(1.2);
+}
+
+.indicator:hover {
+    background: var(--primary-color);
+    opacity: 0.7;
 }
 
 .showcase-item {
@@ -208,6 +291,8 @@
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    min-width: 300px;
+    flex: 0 0 calc(33.333% - 20px);
 }
 
 .showcase-item:hover {
@@ -398,9 +483,33 @@
         padding: 30px 25px;
     }
 
-    .showcase-grid {
-        grid-template-columns: 1fr;
+    .showcase-carousel {
+        flex-direction: column;
         gap: 30px;
+    }
+    
+    .showcase-item {
+        flex: 0 0 100%;
+        min-width: 280px;
+    }
+    
+    .carousel-btn {
+        position: static;
+        margin: 0 auto;
+    }
+    
+    .showcase-carousel .prev-btn,
+    .showcase-carousel .next-btn {
+        order: 2;
+    }
+    
+    .showcase-container {
+        order: 1;
+    }
+    
+    .carousel-indicators {
+        order: 3;
+        margin-top: 20px;
     }
 
     .cta-content h2 {
@@ -447,6 +556,32 @@
 
     .showcase-content {
         padding: 20px;
+    }
+
+    .showcase-item {
+        min-width: 260px;
+    }
+
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .carousel-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .showcase-carousel {
+        gap: 15px;
+    }
+
+    .showcase-track {
+        gap: 20px;
+    }
+
+    .carousel-indicators {
+        margin-top: 25px;
     }
 
     .cta-content h2 {

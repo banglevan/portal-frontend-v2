@@ -9,6 +9,7 @@ class ProductionsComponent {
         this.setupScrollAnimations();
         this.bindEvents();
         this.initInteractiveElements();
+        this.initCarousel();
     }
 
     setupScrollAnimations() {
@@ -414,6 +415,165 @@ class ProductionsComponent {
         });
 
         counters.forEach(counter => observer.observe(counter));
+    }
+
+    initCarousel() {
+        this.currentSlide = 0;
+        this.itemsPerSlide = this.getItemsPerSlide();
+        this.totalItems = document.querySelectorAll('.showcase-item').length;
+        this.maxSlides = Math.ceil(this.totalItems / this.itemsPerSlide) - 1;
+
+        // Initialize carousel elements
+        this.track = document.getElementById('showcaseTrack');
+        this.prevBtn = document.getElementById('prevBtn');
+        this.nextBtn = document.getElementById('nextBtn');
+        this.indicatorsContainer = document.getElementById('carouselIndicators');
+
+        if (!this.track || !this.prevBtn || !this.nextBtn) {
+            console.warn('Carousel elements not found');
+            return;
+        }
+
+        // Generate indicators
+        this.generateIndicators();
+
+        // Bind carousel events
+        this.prevBtn.addEventListener('click', () => this.goToPrevSlide());
+        this.nextBtn.addEventListener('click', () => this.goToNextSlide());
+
+        // Update carousel state
+        this.updateCarousel();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            this.itemsPerSlide = this.getItemsPerSlide();
+            this.maxSlides = Math.ceil(this.totalItems / this.itemsPerSlide) - 1;
+            this.currentSlide = Math.min(this.currentSlide, this.maxSlides);
+            this.updateCarousel();
+        });
+
+        // Touch/swipe support
+        this.initTouchSupport();
+
+        console.log('Carousel initialized:', {
+            totalItems: this.totalItems,
+            itemsPerSlide: this.itemsPerSlide,
+            maxSlides: this.maxSlides
+        });
+    }
+
+    getItemsPerSlide() {
+        const containerWidth = this.track?.parentElement?.offsetWidth || 1200;
+        if (containerWidth < 768) return 1;
+        if (containerWidth < 1024) return 2;
+        return 3;
+    }
+
+    generateIndicators() {
+        if (!this.indicatorsContainer) return;
+
+        const totalSlides = this.maxSlides + 1;
+        this.indicatorsContainer.innerHTML = '';
+
+        for (let i = 0; i < totalSlides; i++) {
+            const indicator = document.createElement('div');
+            indicator.className = `indicator ${i === 0 ? 'active' : ''}`;
+            indicator.addEventListener('click', () => this.goToSlide(i));
+            this.indicatorsContainer.appendChild(indicator);
+        }
+    }
+
+    goToPrevSlide() {
+        if (this.currentSlide > 0) {
+            this.currentSlide--;
+            this.updateCarousel();
+            this.trackEvent('Carousel', 'Previous', this.currentSlide);
+        }
+    }
+
+    goToNextSlide() {
+        if (this.currentSlide < this.maxSlides) {
+            this.currentSlide++;
+            this.updateCarousel();
+            this.trackEvent('Carousel', 'Next', this.currentSlide);
+        }
+    }
+
+    goToSlide(slideIndex) {
+        if (slideIndex >= 0 && slideIndex <= this.maxSlides) {
+            this.currentSlide = slideIndex;
+            this.updateCarousel();
+            this.trackEvent('Carousel', 'GoToSlide', slideIndex);
+        }
+    }
+
+    updateCarousel() {
+        if (!this.track) return;
+
+        // Calculate transform
+        const itemWidth = 100 / this.itemsPerSlide;
+        const translateX = -(this.currentSlide * itemWidth);
+        this.track.style.transform = `translateX(${translateX}%)`;
+
+        // Update buttons state
+        this.prevBtn.disabled = this.currentSlide === 0;
+        this.nextBtn.disabled = this.currentSlide === this.maxSlides;
+
+        // Update indicators
+        const indicators = this.indicatorsContainer?.querySelectorAll('.indicator');
+        indicators?.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === this.currentSlide);
+        });
+    }
+
+    initTouchSupport() {
+        if (!this.track) return;
+
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+
+        const handleTouchStart = (e) => {
+            startX = e.touches ? e.touches[0].clientX : e.clientX;
+            startY = e.touches ? e.touches[0].clientY : e.clientY;
+            isDragging = true;
+        };
+
+        const handleTouchMove = (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+        };
+
+        const handleTouchEnd = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+
+            const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+            const endY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+            
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+            
+            // Only consider horizontal swipes
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                if (deltaX > 0) {
+                    this.goToPrevSlide();
+                } else {
+                    this.goToNextSlide();
+                }
+            }
+        };
+
+        // Touch events
+        this.track.addEventListener('touchstart', handleTouchStart, { passive: false });
+        this.track.addEventListener('touchmove', handleTouchMove, { passive: false });
+        this.track.addEventListener('touchend', handleTouchEnd);
+
+        // Mouse events for desktop
+        this.track.addEventListener('mousedown', handleTouchStart);
+        this.track.addEventListener('mousemove', handleTouchMove);
+        this.track.addEventListener('mouseup', handleTouchEnd);
+        this.track.addEventListener('mouseleave', handleTouchEnd);
     }
 
     trackEvent(category, action, label) {
